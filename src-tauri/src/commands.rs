@@ -1,10 +1,10 @@
-use crate::database::{Database, Account};
-use crate::keychain::KeychainManager;
+use crate::database::{Account, Database};
 use crate::github_auth::GitHubAuth;
+use crate::keychain::KeychainManager;
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use uuid::Uuid;
-use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccountInfo {
@@ -65,15 +65,18 @@ pub struct SSHConfig {
 #[tauri::command]
 pub async fn get_accounts(db: State<'_, Database>) -> Result<Vec<AccountInfo>, String> {
     let accounts = db.get_accounts().map_err(|e| e.to_string())?;
-    
-    let account_infos: Vec<AccountInfo> = accounts.into_iter().map(|account| AccountInfo {
-        id: account.id,
-        username: account.username,
-        avatar_url: account.avatar_url,
-        auth_method: account.auth_method,
-        created_at: account.created_at.to_rfc3339(),
-    }).collect();
-    
+
+    let account_infos: Vec<AccountInfo> = accounts
+        .into_iter()
+        .map(|account| AccountInfo {
+            id: account.id,
+            username: account.username,
+            avatar_url: account.avatar_url,
+            auth_method: account.auth_method,
+            created_at: account.created_at.to_rfc3339(),
+        })
+        .collect();
+
     Ok(account_infos)
 }
 
@@ -86,18 +89,21 @@ pub async fn add_account(
 ) -> Result<AccountInfo, String> {
     // Validate token with GitHub API
     let github_auth = GitHubAuth::new();
-    let user = github_auth.validate_token(&token).await
+    let user = github_auth
+        .validate_token(&token)
+        .await
         .map_err(|e| format!("Token validation failed: {}", e))?;
-    
+
     // Check if account already exists
     if let Ok(Some(_)) = db.get_account_by_username(&username) {
         return Err("Account already exists".to_string());
     }
-    
+
     // Store token in keychain
-    keychain.store_token(&username, &token)
+    keychain
+        .store_token(&username, &token)
         .map_err(|e| format!("Failed to store token: {}", e))?;
-    
+
     // Create account record
     let account = Account {
         id: Uuid::new_v4().to_string(),
@@ -106,9 +112,9 @@ pub async fn add_account(
         auth_method: "manual".to_string(),
         created_at: Utc::now(),
     };
-    
+
     db.add_account(&account).map_err(|e| e.to_string())?;
-    
+
     Ok(AccountInfo {
         id: account.id,
         username: account.username,
@@ -126,16 +132,19 @@ pub async fn remove_account(
 ) -> Result<(), String> {
     // Get account info first
     let accounts = db.get_accounts().map_err(|e| e.to_string())?;
-    let account = accounts.iter().find(|a| a.id == account_id)
+    let account = accounts
+        .iter()
+        .find(|a| a.id == account_id)
         .ok_or("Account not found")?;
-    
+
     // Remove from keychain
-    keychain.delete_token(&account.username)
+    keychain
+        .delete_token(&account.username)
         .map_err(|e| format!("Failed to delete token: {}", e))?;
-    
+
     // Remove from database
     db.remove_account(&account_id).map_err(|e| e.to_string())?;
-    
+
     Ok(())
 }
 
@@ -144,11 +153,12 @@ pub async fn test_connection(
     keychain: State<'_, KeychainManager>,
     username: String,
 ) -> Result<TestConnectionResult, String> {
-    let token = keychain.get_token(&username)
+    let token = keychain
+        .get_token(&username)
         .map_err(|e| format!("Failed to get token: {}", e))?;
-    
+
     let github_auth = GitHubAuth::new();
-    
+
     match github_auth.validate_token(&token).await {
         Ok(user) => {
             let scopes = github_auth.test_token_scopes(&token).await.ok();
@@ -162,22 +172,27 @@ pub async fn test_connection(
             success: false,
             message: format!("Connection failed: {}", e),
             scopes: None,
-        })
+        }),
     }
 }
 
 #[tauri::command]
-pub async fn get_repository_mappings(db: State<'_, Database>) -> Result<Vec<RepositoryMappingInfo>, String> {
+pub async fn get_repository_mappings(
+    db: State<'_, Database>,
+) -> Result<Vec<RepositoryMappingInfo>, String> {
     let mappings = db.get_repository_mappings().map_err(|e| e.to_string())?;
-    
-    let mapping_infos: Vec<RepositoryMappingInfo> = mappings.into_iter().map(|mapping| RepositoryMappingInfo {
-        id: mapping.id,
-        remote_url: mapping.remote_url,
-        account_id: mapping.account_id,
-        remember: mapping.remember,
-        created_at: mapping.created_at.to_rfc3339(),
-    }).collect();
-    
+
+    let mapping_infos: Vec<RepositoryMappingInfo> = mappings
+        .into_iter()
+        .map(|mapping| RepositoryMappingInfo {
+            id: mapping.id,
+            remote_url: mapping.remote_url,
+            account_id: mapping.account_id,
+            remember: mapping.remember,
+            created_at: mapping.created_at.to_rfc3339(),
+        })
+        .collect();
+
     Ok(mapping_infos)
 }
 
@@ -206,51 +221,53 @@ pub async fn remove_repository_mapping(
 #[tauri::command]
 pub async fn install_git_helper() -> Result<(), String> {
     use std::process::Command;
-    
-    let current_exe = std::env::current_exe()
-        .map_err(|e| format!("Failed to get current executable: {}", e))?;
+
+    let current_exe =
+        std::env::current_exe().map_err(|e| format!("Failed to get current executable: {}", e))?;
     let helper_command = format!("!{} credential-helper", current_exe.display());
-    
+
     // Clear existing credential helpers
     let _ = Command::new("git")
         .args(["config", "--global", "--unset-all", "credential.helper"])
         .output();
-    
+
     // Set our credential helper
     let output = Command::new("git")
         .args(["config", "--global", "credential.helper", &helper_command])
         .output()
         .map_err(|e| format!("Failed to run git config: {}", e))?;
-    
+
     if !output.status.success() {
-        return Err(format!("Git config failed: {}", 
-            String::from_utf8_lossy(&output.stderr)));
+        return Err(format!(
+            "Git config failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
     }
-    
+
     Ok(())
 }
 
 #[tauri::command]
 pub async fn get_git_helper_status() -> Result<GitHelperStatus, String> {
     use std::process::Command;
-    
+
     let output = Command::new("git")
         .args(["config", "--global", "credential.helper"])
         .output()
         .map_err(|e| format!("Failed to run git config: {}", e))?;
-    
+
     if !output.status.success() {
         return Ok(GitHelperStatus {
             installed: false,
             configured: false,
         });
     }
-    
+
     let config = String::from_utf8_lossy(&output.stdout);
-    let current_exe = std::env::current_exe()
-        .map_err(|e| format!("Failed to get current executable: {}", e))?;
+    let current_exe =
+        std::env::current_exe().map_err(|e| format!("Failed to get current executable: {}", e))?;
     let expected_helper = format!("!{} credential-helper", current_exe.display());
-    
+
     Ok(GitHelperStatus {
         installed: true,
         configured: config.trim() == expected_helper,
@@ -259,41 +276,45 @@ pub async fn get_git_helper_status() -> Result<GitHelperStatus, String> {
 
 #[tauri::command]
 pub async fn generate_ssh_key(username: String) -> Result<SSHKeyInfo, String> {
-    use std::process::Command;
-    use std::path::PathBuf;
     use std::fs;
-    
-    let home_dir = std::env::var("HOME")
-        .map_err(|_| "HOME directory not found")?;
-    
+    use std::path::PathBuf;
+    use std::process::Command;
+
+    let home_dir = std::env::var("HOME").map_err(|_| "HOME directory not found")?;
+
     let ssh_dir = PathBuf::from(home_dir).join(".ssh");
-    fs::create_dir_all(&ssh_dir)
-        .map_err(|e| format!("Failed to create SSH directory: {}", e))?;
-    
+    fs::create_dir_all(&ssh_dir).map_err(|e| format!("Failed to create SSH directory: {}", e))?;
+
     let key_name = format!("gitswitchhub_{}", username);
     let private_key_path = ssh_dir.join(&key_name);
     let public_key_path = ssh_dir.join(format!("{}.pub", key_name));
-    
+
     // Generate SSH key
     let output = Command::new("ssh-keygen")
-          .args([
-            "-t", "ed25519",
-            "-f", &private_key_path.to_string_lossy(),
-            "-C", &format!("{}@gitswitchhub", username),
-            "-N", "", // No passphrase
+        .args([
+            "-t",
+            "ed25519",
+            "-f",
+            &private_key_path.to_string_lossy(),
+            "-C",
+            &format!("{}@gitswitchhub", username),
+            "-N",
+            "", // No passphrase
         ])
         .output()
         .map_err(|e| format!("Failed to generate SSH key: {}", e))?;
-    
+
     if !output.status.success() {
-        return Err(format!("SSH key generation failed: {}", 
-            String::from_utf8_lossy(&output.stderr)));
+        return Err(format!(
+            "SSH key generation failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        ));
     }
-    
+
     // Read public key
     let public_key = fs::read_to_string(&public_key_path)
         .map_err(|e| format!("Failed to read public key: {}", e))?;
-    
+
     Ok(SSHKeyInfo {
         public_key: public_key.trim().to_string(),
         private_key_path: private_key_path.to_string_lossy().to_string(),
@@ -303,12 +324,11 @@ pub async fn generate_ssh_key(username: String) -> Result<SSHKeyInfo, String> {
 
 #[tauri::command]
 pub async fn get_ssh_config(username: String) -> Result<SSHConfig, String> {
-    let home_dir = std::env::var("HOME")
-        .map_err(|_| "HOME directory not found")?;
-    
+    let home_dir = std::env::var("HOME").map_err(|_| "HOME directory not found")?;
+
     let key_name = format!("gitswitchhub_{}", username);
     let private_key_path = format!("{}/.ssh/{}", home_dir, key_name);
-    
+
     Ok(SSHConfig {
         host: format!("github-{}", username),
         hostname: "github.com".to_string(),
@@ -321,7 +341,8 @@ pub async fn get_ssh_config(username: String) -> Result<SSHConfig, String> {
 pub async fn convert_remote_to_ssh(remote_url: String, username: String) -> Result<String, String> {
     // Convert HTTPS URL to SSH format
     if remote_url.starts_with("https://github.com/") {
-        let repo_path = remote_url.strip_prefix("https://github.com/")
+        let repo_path = remote_url
+            .strip_prefix("https://github.com/")
             .ok_or("Invalid GitHub URL")?;
         Ok(format!("git@github-{}:{}", username, repo_path))
     } else {
@@ -337,18 +358,19 @@ pub async fn show_account_chooser(
 ) -> Result<String, String> {
     // Get all accounts
     let accounts = db.get_accounts().map_err(|e| e.to_string())?;
-    
+
     if accounts.is_empty() {
         return Err("No accounts configured".to_string());
     }
-    
+
     // For now, return the first account
     // In a real implementation, this would show a GUI chooser
     let account = &accounts[0];
-    
+
     // Verify token exists
-    keychain.get_token(&account.username)
+    keychain
+        .get_token(&account.username)
         .map_err(|e| format!("No token found for account: {}", e))?;
-    
+
     Ok(account.username.clone())
 }

@@ -1,9 +1,9 @@
+pub mod commands;
 pub mod database;
-pub mod keychain;
 pub mod git_helper;
 pub mod github_auth;
+pub mod keychain;
 pub mod ssh;
-pub mod commands;
 
 use tauri::Manager;
 
@@ -32,11 +32,11 @@ pub fn run() {
             // Initialize database on startup
             let db = database::Database::new()?;
             app.manage(db);
-            
+
             // Initialize keychain manager
             let keychain = keychain::KeychainManager::new();
             app.manage(keychain);
-            
+
             Ok(())
         })
         .run(tauri::generate_context!())

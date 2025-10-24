@@ -1,6 +1,6 @@
-use thiserror::Error;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum KeychainError {
@@ -41,7 +41,8 @@ impl KeychainManager {
     pub fn get_token(&self, account: &str) -> Result<String, KeychainError> {
         let account_key = format!("github:{}", account);
         let storage = self.storage.lock().unwrap();
-        storage.get(&account_key)
+        storage
+            .get(&account_key)
             .cloned()
             .ok_or(KeychainError::ItemNotFound)
     }

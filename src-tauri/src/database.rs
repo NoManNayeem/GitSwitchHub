@@ -1,8 +1,8 @@
+use chrono::{DateTime, Utc};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
-use chrono::{DateTime, Utc};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -39,29 +39,30 @@ impl Database {
     pub fn new() -> Result<Self, DatabaseError> {
         let db_path = Self::get_db_path()?;
         let conn = Connection::open(db_path)?;
-        let db = Database { 
-            conn: Arc::new(Mutex::new(conn)) 
+        let db = Database {
+            conn: Arc::new(Mutex::new(conn)),
         };
         db.init_tables()?;
         Ok(db)
     }
 
     fn get_db_path() -> Result<PathBuf, DatabaseError> {
-        let home_dir = std::env::var("HOME")
-            .map_err(|_| DatabaseError::Io(std::io::Error::new(
+        let home_dir = std::env::var("HOME").map_err(|_| {
+            DatabaseError::Io(std::io::Error::new(
                 std::io::ErrorKind::NotFound,
-                "HOME directory not found"
-            )))?;
-        
+                "HOME directory not found",
+            ))
+        })?;
+
         let app_dir = PathBuf::from(home_dir).join(".gitswitchhub");
         std::fs::create_dir_all(&app_dir)?;
-        
+
         Ok(app_dir.join("database.db"))
     }
 
     fn init_tables(&self) -> Result<(), DatabaseError> {
         let conn = self.conn.lock().unwrap();
-        
+
         // Create accounts table
         conn.execute(
             "CREATE TABLE IF NOT EXISTS accounts (
@@ -111,7 +112,7 @@ impl Database {
         let mut stmt = conn.prepare(
             "SELECT id, username, avatar_url, auth_method, created_at FROM accounts ORDER BY created_at DESC"
         )?;
-        
+
         let account_iter = stmt.query_map([], |row| {
             Ok(Account {
                 id: row.get(0)?,
@@ -131,12 +132,15 @@ impl Database {
         Ok(accounts)
     }
 
-    pub fn get_account_by_username(&self, username: &str) -> Result<Option<Account>, DatabaseError> {
+    pub fn get_account_by_username(
+        &self,
+        username: &str,
+    ) -> Result<Option<Account>, DatabaseError> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
             "SELECT id, username, avatar_url, auth_method, created_at FROM accounts WHERE username = ?1"
         )?;
-        
+
         let mut rows = stmt.query_map([username], |row| {
             Ok(Account {
                 id: row.get(0)?,
@@ -158,33 +162,35 @@ impl Database {
 
     pub fn remove_account(&self, account_id: &str) -> Result<(), DatabaseError> {
         let conn = self.conn.lock().unwrap();
-        
+
         // Remove repository mappings first
         conn.execute(
             "DELETE FROM repository_mappings WHERE account_id = ?1",
             [account_id],
         )?;
-        
+
         // Remove account
-        conn.execute(
-            "DELETE FROM accounts WHERE id = ?1",
-            [account_id],
-        )?;
-        
+        conn.execute("DELETE FROM accounts WHERE id = ?1", [account_id])?;
+
         Ok(())
     }
 
-    pub fn set_repository_mapping(&self, remote_url: &str, account_id: &str, remember: bool) -> Result<(), DatabaseError> {
+    pub fn set_repository_mapping(
+        &self,
+        remote_url: &str,
+        account_id: &str,
+        remember: bool,
+    ) -> Result<(), DatabaseError> {
         let conn = self.conn.lock().unwrap();
         let mapping_id = uuid::Uuid::new_v4().to_string();
         let now = Utc::now();
-        
+
         // Remove existing mapping for this URL
         conn.execute(
             "DELETE FROM repository_mappings WHERE remote_url = ?1",
             [remote_url],
         )?;
-        
+
         // Add new mapping
         conn.execute(
             "INSERT INTO repository_mappings (id, remote_url, account_id, remember, created_at)
@@ -197,16 +203,19 @@ impl Database {
                 &now.to_rfc3339(),
             ],
         )?;
-        
+
         Ok(())
     }
 
-    pub fn get_repository_mapping(&self, remote_url: &str) -> Result<Option<RepositoryMapping>, DatabaseError> {
+    pub fn get_repository_mapping(
+        &self,
+        remote_url: &str,
+    ) -> Result<Option<RepositoryMapping>, DatabaseError> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
             "SELECT id, remote_url, account_id, remember, created_at FROM repository_mappings WHERE remote_url = ?1"
         )?;
-        
+
         let mut rows = stmt.query_map([remote_url], |row| {
             Ok(RepositoryMapping {
                 id: row.get(0)?,
@@ -231,7 +240,7 @@ impl Database {
         let mut stmt = conn.prepare(
             "SELECT id, remote_url, account_id, remember, created_at FROM repository_mappings ORDER BY created_at DESC"
         )?;
-        
+
         let mapping_iter = stmt.query_map([], |row| {
             Ok(RepositoryMapping {
                 id: row.get(0)?,

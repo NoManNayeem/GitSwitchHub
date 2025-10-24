@@ -1,8 +1,8 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
-use tokio::time::sleep;
 use thiserror::Error;
+use tokio::time::sleep;
 
 #[derive(Error, Debug)]
 pub enum GitHubAuthError {
@@ -63,26 +63,29 @@ impl GitHubAuth {
 
     pub async fn start_device_flow(&self) -> Result<DeviceCodeResponse, GitHubAuthError> {
         let client_id = "Ov23liA2BpF0gI3E4nUX"; // GitHub OAuth App ID for GitSwitchHub
-        
-        let response = self.client
+
+        let response = self
+            .client
             .post("https://github.com/login/device/code")
             .header("Accept", "application/json")
-            .form(&[
-                ("client_id", client_id),
-                ("scope", "repo,user"),
-            ])
+            .form(&[("client_id", client_id), ("scope", "repo,user")])
             .send()
             .await?;
 
         if !response.status().is_success() {
-            return Err(GitHubAuthError::Http(response.error_for_status().unwrap_err()));
+            return Err(GitHubAuthError::Http(
+                response.error_for_status().unwrap_err(),
+            ));
         }
 
         let device_response: DeviceCodeResponse = response.json().await?;
         Ok(device_response)
     }
 
-    pub async fn poll_for_token(&self, device_code: &str) -> Result<DeviceTokenResponse, GitHubAuthError> {
+    pub async fn poll_for_token(
+        &self,
+        device_code: &str,
+    ) -> Result<DeviceTokenResponse, GitHubAuthError> {
         let client_id = "Ov23liA2BpF0gI3E4nUX";
         let max_attempts = 60; // 5 minutes with 5-second intervals
         let mut attempts = 0;
@@ -92,7 +95,8 @@ impl GitHubAuth {
                 return Err(GitHubAuthError::Timeout);
             }
 
-            let response = self.client
+            let response = self
+                .client
                 .post("https://github.com/login/oauth/access_token")
                 .header("Accept", "application/json")
                 .form(&[
@@ -104,22 +108,24 @@ impl GitHubAuth {
                 .await?;
 
             if !response.status().is_success() {
-                return Err(GitHubAuthError::Http(response.error_for_status().unwrap_err()));
+                return Err(GitHubAuthError::Http(
+                    response.error_for_status().unwrap_err(),
+                ));
             }
 
             let text = response.text().await?;
-            
+
             // Check for error responses
             if text.contains("authorization_pending") {
                 attempts += 1;
                 sleep(Duration::from_secs(5)).await;
                 continue;
             }
-            
+
             if text.contains("access_denied") {
                 return Err(GitHubAuthError::Denied);
             }
-            
+
             if text.contains("expired_token") {
                 return Err(GitHubAuthError::Timeout);
             }
@@ -135,7 +141,8 @@ impl GitHubAuth {
     }
 
     pub async fn validate_token(&self, token: &str) -> Result<GitHubUser, GitHubAuthError> {
-        let response = self.client
+        let response = self
+            .client
             .get("https://api.github.com/user")
             .header("Authorization", &format!("Bearer {}", token))
             .header("Accept", "application/vnd.github.v3+json")
@@ -152,7 +159,8 @@ impl GitHubAuth {
     }
 
     pub async fn test_token_scopes(&self, token: &str) -> Result<Vec<String>, GitHubAuthError> {
-        let response = self.client
+        let response = self
+            .client
             .get("https://api.github.com/user")
             .header("Authorization", &format!("Bearer {}", token))
             .header("Accept", "application/vnd.github.v3+json")
@@ -175,9 +183,17 @@ impl GitHubAuth {
         Ok(scopes)
     }
 
-    pub async fn check_sso_requirement(&self, token: &str, org: &str) -> Result<bool, GitHubAuthError> {
-        let response = self.client
-            .get(format!("https://api.github.com/orgs/{}/memberships/me", org))
+    pub async fn check_sso_requirement(
+        &self,
+        token: &str,
+        org: &str,
+    ) -> Result<bool, GitHubAuthError> {
+        let response = self
+            .client
+            .get(format!(
+                "https://api.github.com/orgs/{}/memberships/me",
+                org
+            ))
             .header("Authorization", &format!("Bearer {}", token))
             .header("Accept", "application/vnd.github.v3+json")
             .header("User-Agent", "GitSwitchHub/1.0")
