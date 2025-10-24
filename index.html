@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitSwitchHub - GitHub Account Switching Made Easy</title>
@@ -20,53 +20,80 @@
     <meta property="twitter:description" content="A native macOS application for seamless GitHub account switching. Built with Tauri, React, and TypeScript.">
     <meta property="twitter:image" content="https://nomannayeem.github.io/GitSwitchHub/assets/og-image.png">
     
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
+</head>
+<body>
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <h2>GitSwitchHub</h2>
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    <span class="logo-text">GitSwitchHub</span>
+                </div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#features" class="nav-link">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#tutorial" class="nav-link">Tutorial</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#download" class="nav-link">Download</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://github.com/NoManNayeem/GitSwitchHub" class="nav-link" target="_blank">GitHub</a>
-                </li>
-            </ul>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#tutorial" class="nav-link">Tutorial</a>
+                <a href="#download" class="nav-link">Download</a>
+                <a href="https://github.com/NoManNayeem/GitSwitchHub" class="nav-link nav-github" target="_blank">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background">
+            <div class="hero-gradient"></div>
+            <div class="hero-particles"></div>
+        </div>
+        
         <div class="hero-container">
             <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🚀</span>
+                    <span class="badge-text">Now Available for macOS</span>
+                </div>
+                
                 <h1 class="hero-title">
                     Switch GitHub Accounts
                     <span class="gradient-text">Seamlessly</span>
                 </h1>
+                
                 <p class="hero-description">
                     A native macOS application that makes managing multiple GitHub accounts effortless. 
                     Built with modern technologies for the best developer experience.
                 </p>
+                
                 <div class="hero-buttons">
                     <a href="#download" class="btn btn-primary">
-                        <span>Download for macOS</span>
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7,10 12,15 17,10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
+                        <span>Download for macOS</span>
                     </a>
+                    
                     <a href="https://github.com/NoManNayeem/GitSwitchHub" class="btn btn-secondary" target="_blank">
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
@@ -74,7 +101,23 @@
                         <span>View on GitHub</span>
                     </a>
                 </div>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Architectures</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Accounts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Secure</div>
+                    </div>
+                </div>
             </div>
+            
             <div class="hero-visual">
                 <div class="app-mockup">
                     <div class="mockup-window">
@@ -124,6 +167,7 @@
                     Built for developers who work with multiple GitHub accounts
                 </p>
             </div>
+            
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -139,6 +183,7 @@
                         Add and manage unlimited GitHub accounts with secure token storage
                     </p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -154,6 +199,7 @@
                         Automatically map repositories to specific accounts for seamless switching
                     </p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -167,6 +213,7 @@
                         Tokens are stored securely with industry-standard encryption
                     </p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -178,12 +225,12 @@
                         Built with Tauri for native macOS performance and efficiency
                     </p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 12l2 2 4-4"></path>
                             <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
-                            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
                             <path d="M13 12h3a2 2 0 0 1 2 2v1"></path>
                             <path d="M9 12H6a2 2 0 0 0-2 2v1"></path>
                         </svg>
@@ -193,6 +240,7 @@
                         Automatic credential management for all Git operations
                     </p>
                 </div>
+                
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -208,7 +256,7 @@
         </div>
     </section>
 
-    <!-- How to Get Started -->
+    <!-- Tutorial Section -->
     <section id="tutorial" class="tutorial">
         <div class="container">
             <div class="section-header">
@@ -217,6 +265,7 @@
                     Get up and running with GitSwitchHub in minutes
                 </p>
             </div>
+            
             <div class="tutorial-steps">
                 <div class="step">
                     <div class="step-number">1</div>
@@ -227,6 +276,7 @@
                         </p>
                     </div>
                 </div>
+                
                 <div class="step">
                     <div class="step-number">2</div>
                     <div class="step-content">
@@ -236,6 +286,7 @@
                         </p>
                     </div>
                 </div>
+                
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-content">
@@ -245,6 +296,7 @@
                         </p>
                     </div>
                 </div>
+                
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-content">
@@ -266,6 +318,7 @@
                 <p class="download-description">
                     Download GitSwitchHub and start managing your GitHub accounts like a pro
                 </p>
+                
                 <div class="download-buttons">
                     <a href="https://github.com/NoManNayeem/GitSwitchHub/releases" class="btn btn-primary btn-large" target="_blank">
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -276,36 +329,26 @@
                         <span>Download Latest Release</span>
                     </a>
                 </div>
+                
                 <div class="download-info">
-                    <p class="download-note">
-                        <strong>System Requirements:</strong> macOS 10.15 or later
-                    </p>
-                    <p class="download-note">
-                        <strong>Architecture:</strong> Intel and Apple Silicon supported
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about">
-        <div class="container">
-            <div class="about-content">
-                <h2 class="about-title">About GitSwitchHub</h2>
-                <p class="about-description">
-                    GitSwitchHub is an open-source project built with modern technologies to solve 
-                    the common problem of managing multiple GitHub accounts. It's designed by developers, 
-                    for developers, with a focus on simplicity, security, and performance.
-                </p>
-                <div class="about-tech">
-                    <h3 class="tech-title">Built With</h3>
-                    <div class="tech-stack">
-                        <span class="tech-item">Tauri</span>
-                        <span class="tech-item">React</span>
-                        <span class="tech-item">TypeScript</span>
-                        <span class="tech-item">Rust</span>
-                        <span class="tech-item">SQLite</span>
+                    <div class="download-requirement">
+                        <svg class="requirement-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <div class="requirement-text">
+                            <strong>System Requirements:</strong> macOS 10.15 or later
+                        </div>
+                    </div>
+                    
+                    <div class="download-requirement">
+                        <svg class="requirement-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                        <div class="requirement-text">
+                            <strong>Architecture:</strong> Intel and Apple Silicon supported
+                        </div>
                     </div>
                 </div>
             </div>
@@ -317,11 +360,17 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <h3 class="footer-title">GitSwitchHub</h3>
+                    <div class="footer-logo">
+                        <svg class="footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        <span class="footer-logo-text">GitSwitchHub</span>
+                    </div>
                     <p class="footer-description">
                         Making GitHub account switching effortless for developers
                     </p>
                 </div>
+                
                 <div class="footer-links">
                     <div class="footer-section">
                         <h4 class="footer-section-title">Project</h4>
@@ -331,6 +380,7 @@
                             <li><a href="https://github.com/NoManNayeem/GitSwitchHub/issues" target="_blank">Issues</a></li>
                         </ul>
                     </div>
+                    
                     <div class="footer-section">
                         <h4 class="footer-section-title">Developer</h4>
                         <ul class="footer-list">
@@ -341,6 +391,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="footer-bottom">
                 <p class="footer-copyright">
                     © 2024 GitSwitchHub. Built with ❤️ by <a href="https://github.com/NoManNayeem" target="_blank">NoManNayeem</a>
@@ -350,5 +401,5 @@
     </footer>
 
     <script src="script.js"></script>
-  </body>
+</body>
 </html>
