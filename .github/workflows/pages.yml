@@ -32,7 +32,11 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build branding page
-        run: npm run build:pages
+        run: |
+          echo "Building branding page..."
+          npm run build:pages
+          echo "Build completed. Contents of dist/:"
+          ls -la dist/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
