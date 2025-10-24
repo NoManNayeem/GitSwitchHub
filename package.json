@@ -1,0 +1,98 @@
+{
+  "name": "gitswitchhub",
+  "version": "1.0.0",
+  "description": "A native macOS application for seamless GitHub account switching. Built with Tauri, React, and TypeScript.",
+  "type": "module",
+  "author": {
+    "name": "NoManNayeem",
+    "email": "contact@nomannayeem.dev",
+    "url": "https://github.com/NoManNayeem"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/NoManNayeem/GitSwitchHub#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NoManNayeem/GitSwitchHub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NoManNayeem/GitSwitchHub/issues"
+  },
+  "keywords": [
+    "github",
+    "account-switching",
+    "macos",
+    "tauri",
+    "react",
+    "typescript",
+    "git",
+    "developer-tools",
+    "native-app",
+    "credential-helper"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky install",
+    "release": "standard-version",
+    "release:major": "standard-version --release-as major",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "@tauri-apps/cli": "^2",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.2.5",
+    "vitest": "^1.2.0",
+    "@vitest/ui": "^1.2.0",
+    "c8": "^8.0.1",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.0",
+    "standard-version": "^9.5.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "standard-version": {
+    "scripts": {
+      "precommit": "git add CHANGELOG.md"
+    }
+  }
+}

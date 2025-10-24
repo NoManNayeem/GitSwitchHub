@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitSwitchHub - Seamless GitHub Account Switching</title>
+    <meta name="description" content="A native macOS application for seamless GitHub account switching. Built with Tauri, React, and TypeScript.">
+    <meta name="keywords" content="GitHub, account switching, macOS, Tauri, React, TypeScript, Git, developer tools">
+    <meta name="author" content="NoManNayeem">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/NoManNayeem/GitSwitchHub">
+    <meta property="og:title" content="GitSwitchHub - Seamless GitHub Account Switching">
+    <meta property="og:description" content="A native macOS application for seamless GitHub account switching. Built with Tauri, React, and TypeScript.">
+    <meta property="og:image" content="https://github.com/NoManNayeem/GitSwitchHub/raw/main/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://github.com/NoManNayeem/GitSwitchHub">
+    <meta property="twitter:title" content="GitSwitchHub - Seamless GitHub Account Switching">
+    <meta property="twitter:description" content="A native macOS application for seamless GitHub account switching. Built with Tauri, React, and TypeScript.">
+    <meta property="twitter:image" content="https://github.com/NoManNayeem/GitSwitchHub/raw/main/assets/og-image.png">
+
+    <link rel="icon" type="image/svg+xml" href="/public/tauri.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-code-branch"></i>
+                <span>GitSwitchHub</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#tutorial" class="nav-link">Tutorial</a>
+                <a href="#download" class="nav-link">Download</a>
+                <a href="https://github.com/NoManNayeem/GitSwitchHub" class="nav-link" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-apple"></i>
+                    <span>Native macOS App</span>
+                </div>
+                <h1 class="hero-title">
+                    Seamless GitHub Account Switching
+                    <span class="gradient-text">Made Simple</span>
+                </h1>
+                <p class="hero-description">
+                    GitSwitchHub is a powerful native macOS application that allows developers to effortlessly switch between multiple GitHub accounts. Built with modern technologies including Tauri, React, and TypeScript.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Download for macOS
+                    </a>
+                    <a href="https://github.com/NoManNayeem/GitSwitchHub" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i>
+                        View on GitHub
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Native Performance</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Accounts Supported</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Setup Time</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="app-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="mockup-title">GitSwitchHub</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-tabs">
+                            <div class="tab active">Accounts</div>
+                            <div class="tab">Mappings</div>
+                            <div class="tab">Settings</div>
+                        </div>
+                        <div class="mockup-account">
+                            <div class="account-avatar"></div>
+                            <div class="account-info">
+                                <div class="account-name">NoManNayeem</div>
+                                <div class="account-status">Connected</div>
+                            </div>
+                        </div>
+                        <div class="mockup-account">
+                            <div class="account-avatar"></div>
+                            <div class="account-info">
+                                <div class="account-name">Work Account</div>
+                                <div class="account-status">Connected</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-description">Everything you need for seamless GitHub account management</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Multiple Account Management</h3>
+                    <p class="feature-description">Add and manage unlimited GitHub accounts with secure token storage.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="feature-title">Repository Mapping</h3>
+                    <p class="feature-description">Automatically map repositories to specific accounts for seamless switching.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3 class="feature-title">Git Credential Helper</h3>
+                    <p class="feature-description">Automatic credential management for all your Git operations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Secure Storage</h3>
+                    <p class="feature-description">Your tokens are stored securely with industry-standard encryption.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3 class="feature-title">SSH Key Management</h3>
+                    <p class="feature-description">Generate and manage SSH keys for different accounts automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Modern UI</h3>
+                    <p class="feature-description">Beautiful, intuitive interface built with React and modern design principles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutorial Section -->
+    <section id="tutorial" class="tutorial">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started in Minutes</h2>
+                <p class="section-description">Follow this simple tutorial to set up GitSwitchHub</p>
+            </div>
+            <div class="tutorial-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Download & Install</h3>
+                        <p>Download the latest release from GitHub and install the .dmg file on your macOS system.</p>
+                        <div class="step-code">
+                            <code># Download from GitHub Releases</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Your GitHub Accounts</h3>
+                        <p>Open GitSwitchHub and add your GitHub accounts using personal access tokens.</p>
+                        <div class="step-code">
+                            <code># Create token at github.com/settings/tokens</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Map Your Repositories</h3>
+                        <p>Map specific repositories to specific accounts for automatic switching.</p>
+                        <div class="step-code">
+                            <code># Repository URL → Account mapping</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Install Git Helper</h3>
+                        <p>Install the Git credential helper to enable automatic account switching.</p>
+                        <div class="step-code">
+                            <code># One-click installation in Settings</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download">
+        <div class="container">
+            <div class="download-content">
+                <h2 class="download-title">Ready to Get Started?</h2>
+                <p class="download-description">Download GitSwitchHub and experience seamless GitHub account switching</p>
+                <div class="download-buttons">
+                    <a href="https://github.com/NoManNayeem/GitSwitchHub/releases/latest" class="btn btn-primary btn-large">
+                        <i class="fas fa-download"></i>
+                        Download Latest Release
+                    </a>
+                    <a href="https://github.com/NoManNayeem/GitSwitchHub" class="btn btn-secondary btn-large">
+                        <i class="fab fa-github"></i>
+                        View Source Code
+                    </a>
+                </div>
+                <div class="download-info">
+                    <div class="info-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>macOS 10.15+ Required</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Open Source & Secure</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-rocket"></i>
+                        <span>Lightning Fast</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-code-branch"></i>
+                        <span>GitSwitchHub</span>
+                    </div>
+                    <p class="footer-description">
+                        A native macOS application for seamless GitHub account switching. Built with modern technologies and developer experience in mind.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://github.com/NoManNayeem" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com/NoManNayeem" target="_blank" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/nomannayeem" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#tutorial">Tutorial</a></li>
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="https://github.com/NoManNayeem/GitSwitchHub/releases">Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Development</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/NoManNayeem/GitSwitchHub">Source Code</a></li>
+                        <li><a href="https://github.com/NoManNayeem/GitSwitchHub/issues">Issues</a></li>
+                        <li><a href="https://github.com/NoManNayeem/GitSwitchHub/pulls">Pull Requests</a></li>
+                        <li><a href="https://github.com/NoManNayeem/GitSwitchHub/wiki">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/NoManNayeem">GitHub</a></li>
+                        <li><a href="https://twitter.com/NoManNayeem">Twitter</a></li>
+                        <li><a href="https://linkedin.com/in/nomannayeem">LinkedIn</a></li>
+                        <li><a href="mailto:contact@nomannayeem.dev">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NoManNayeem. All rights reserved. Built with ❤️ using Tauri, React, and TypeScript.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

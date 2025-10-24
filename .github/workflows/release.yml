@@ -1,0 +1,194 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: GitSwitchHub ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## 🚀 GitSwitchHub ${{ steps.get_version.outputs.VERSION }}
+            
+            ### ✨ What's New
+            - Enhanced GitHub account switching
+            - Improved UI/UX with modern design
+            - Better error handling and user feedback
+            - Performance optimizations
+            
+            ### 📦 Installation
+            1. Download the `.dmg` file for your architecture
+            2. Open the downloaded file
+            3. Drag GitSwitchHub to your Applications folder
+            4. Launch the application and follow the setup guide
+            
+            ### 🔧 System Requirements
+            - macOS 10.15 or later
+            - Intel or Apple Silicon Mac
+            
+            ### 📋 Full Changelog
+            See the [commit history](https://github.com/NoManNayeem/GitSwitchHub/compare/${{ github.event.before }}...${{ github.sha }}) for detailed changes.
+            
+            ### 🐛 Bug Reports & Feature Requests
+            Found a bug or have a feature request? Please [open an issue](https://github.com/NoManNayeem/GitSwitchHub/issues).
+            
+            ### 💖 Support
+            If you find GitSwitchHub useful, please consider:
+            - ⭐ Starring this repository
+            - 🐛 Reporting bugs
+            - 💡 Suggesting new features
+            - 📢 Sharing with other developers
+            
+            ---
+            
+            **Built with ❤️ by [NoManNayeem](https://github.com/NoManNayeem)**
+          draft: false
+          prerelease: false
+
+  build-macos-intel:
+    name: Build macOS Intel
+    runs-on: macos-latest
+    needs: create-release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-apple-darwin
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ steps.get_version.outputs.VERSION }}
+          releaseName: 'GitSwitchHub ${{ steps.get_version.outputs.VERSION }}'
+          releaseBody: 'See the release notes for details'
+          releaseDraft: false
+          prerelease: false
+        args: --target x86_64-apple-darwin
+
+      - name: Upload Intel DMG
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: src-tauri/target/release/bundle/dmg/GitSwitchHub_${{ steps.get_version.outputs.VERSION }}_x64.dmg
+          asset_name: GitSwitchHub_${{ steps.get_version.outputs.VERSION }}_x64.dmg
+          asset_content_type: application/octet-stream
+
+  build-macos-arm:
+    name: Build macOS ARM
+    runs-on: macos-latest
+    needs: create-release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ steps.get_version.outputs.VERSION }}
+          releaseName: 'GitSwitchHub ${{ steps.get_version.outputs.VERSION }}'
+          releaseBody: 'See the release notes for details'
+          releaseDraft: false
+          prerelease: false
+        args: --target aarch64-apple-darwin
+
+      - name: Upload ARM DMG
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: src-tauri/target/release/bundle/dmg/GitSwitchHub_${{ steps.get_version.outputs.VERSION }}_aarch64.dmg
+          asset_name: GitSwitchHub_${{ steps.get_version.outputs.VERSION }}_aarch64.dmg
+          asset_content_type: application/octet-stream
+
+  notify:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [create-release, build-macos-intel, build-macos-arm]
+    if: always()
+    steps:
+      - name: Notify Success
+        if: ${{ needs.create-release.result == 'success' && needs.build-macos-intel.result == 'success' && needs.build-macos-arm.result == 'success' }}
+        run: |
+          echo "✅ Release ${{ steps.get_version.outputs.VERSION }} created successfully!"
+          echo "📦 Both Intel and ARM builds are ready for download"
+          echo "🔗 Release URL: https://github.com/NoManNayeem/GitSwitchHub/releases/tag/${{ steps.get_version.outputs.VERSION }}"
+
+      - name: Notify Failure
+        if: ${{ needs.create-release.result == 'failure' || needs.build-macos-intel.result == 'failure' || needs.build-macos-arm.result == 'failure' }}
+        run: |
+          echo "❌ Release failed!"
+          echo "Check the logs for details"
+          exit 1
