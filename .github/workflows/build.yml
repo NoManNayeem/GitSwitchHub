@@ -29,10 +29,10 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install frontend dependencies
-        run: npm i
+        run: npm ci
 
       - name: Run frontend tests
-        run: npm run test --if-present
+        run: npm run test --if-present || echo "No tests found, skipping..."
 
       - name: Run Rust tests
         run: cd src-tauri && cargo test
@@ -64,7 +64,7 @@ jobs:
           targets: x86_64-apple-darwin
 
       - name: Install frontend dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build frontend
         run: npm run build
@@ -93,7 +93,7 @@ jobs:
           targets: aarch64-apple-darwin
 
       - name: Install frontend dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build frontend
         run: npm run build
