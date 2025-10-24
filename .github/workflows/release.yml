@@ -114,7 +114,7 @@ jobs:
           releaseBody: 'See the release notes for details'
           releaseDraft: false
           prerelease: false
-        args: --target x86_64-apple-darwin
+          args: --target x86_64-apple-darwin
 
       - name: Upload Intel DMG
         uses: actions/upload-release-asset@v1
@@ -161,7 +161,7 @@ jobs:
           releaseBody: 'See the release notes for details'
           releaseDraft: false
           prerelease: false
-        args: --target aarch64-apple-darwin
+          args: --target aarch64-apple-darwin
 
       - name: Upload ARM DMG
         uses: actions/upload-release-asset@v1
