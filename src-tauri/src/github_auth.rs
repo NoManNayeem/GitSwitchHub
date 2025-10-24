@@ -48,6 +48,12 @@ pub struct GitHubAuth {
     client: Client,
 }
 
+impl Default for GitHubAuth {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GitHubAuth {
     pub fn new() -> Self {
         Self {
@@ -171,7 +177,7 @@ impl GitHubAuth {
 
     pub async fn check_sso_requirement(&self, token: &str, org: &str) -> Result<bool, GitHubAuthError> {
         let response = self.client
-            .get(&format!("https://api.github.com/orgs/{}/memberships/me", org))
+            .get(format!("https://api.github.com/orgs/{}/memberships/me", org))
             .header("Authorization", &format!("Bearer {}", token))
             .header("Accept", "application/vnd.github.v3+json")
             .header("User-Agent", "GitSwitchHub/1.0")

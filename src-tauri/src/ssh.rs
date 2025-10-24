@@ -15,6 +15,12 @@ pub enum SSHError {
 
 pub struct SSHManager;
 
+impl Default for SSHManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SSHManager {
     pub fn new() -> Self {
         Self
@@ -36,7 +42,7 @@ impl SSHManager {
         
         // Generate SSH key
         let output = Command::new("ssh-keygen")
-            .args(&[
+              .args([
                 "-t", "ed25519",
                 "-f", &private_key_path.to_string_lossy(),
                 "-C", &format!("{}@gitswitchhub", username),
@@ -155,7 +161,7 @@ impl SSHManager {
         let config = self.get_ssh_config(username)?;
         
         let output = Command::new("ssh")
-            .args(&[
+              .args([
                 "-T",
                 "-o", "StrictHostKeyChecking=no",
                 "-o", "ConnectTimeout=10",

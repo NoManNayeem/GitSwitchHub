@@ -213,12 +213,12 @@ pub async fn install_git_helper() -> Result<(), String> {
     
     // Clear existing credential helpers
     let _ = Command::new("git")
-        .args(&["config", "--global", "--unset-all", "credential.helper"])
+        .args(["config", "--global", "--unset-all", "credential.helper"])
         .output();
     
     // Set our credential helper
     let output = Command::new("git")
-        .args(&["config", "--global", "credential.helper", &helper_command])
+        .args(["config", "--global", "credential.helper", &helper_command])
         .output()
         .map_err(|e| format!("Failed to run git config: {}", e))?;
     
@@ -235,7 +235,7 @@ pub async fn get_git_helper_status() -> Result<GitHelperStatus, String> {
     use std::process::Command;
     
     let output = Command::new("git")
-        .args(&["config", "--global", "credential.helper"])
+        .args(["config", "--global", "credential.helper"])
         .output()
         .map_err(|e| format!("Failed to run git config: {}", e))?;
     
@@ -276,7 +276,7 @@ pub async fn generate_ssh_key(username: String) -> Result<SSHKeyInfo, String> {
     
     // Generate SSH key
     let output = Command::new("ssh-keygen")
-        .args(&[
+          .args([
             "-t", "ed25519",
             "-f", &private_key_path.to_string_lossy(),
             "-C", &format!("{}@gitswitchhub", username),

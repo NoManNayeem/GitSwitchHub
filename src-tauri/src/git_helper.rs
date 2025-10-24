@@ -28,7 +28,7 @@ impl GitCredentialHelper {
 
     pub fn run(&self) -> Result<(), GitHelperError> {
         let stdin = io::stdin();
-        let mut lines = stdin.lock().lines();
+        let lines = stdin.lock().lines();
         
         let mut url = String::new();
         let mut protocol = String::new();
@@ -36,7 +36,7 @@ impl GitCredentialHelper {
         let mut _path = String::new();
         
         // Parse Git credential helper input
-        while let Some(line) = lines.next() {
+        for line in lines {
             let line = line?;
             if line.is_empty() {
                 break;
@@ -109,12 +109,12 @@ impl GitCredentialHelper {
         
         // Clear existing credential helpers
         let _ = Command::new("git")
-            .args(&["config", "--global", "--unset-all", "credential.helper"])
+            .args(["config", "--global", "--unset-all", "credential.helper"])
             .output();
         
         // Set our credential helper
         let output = Command::new("git")
-            .args(&["config", "--global", "credential.helper", &helper_command])
+            .args(["config", "--global", "credential.helper", &helper_command])
             .output()?;
         
         if !output.status.success() {
@@ -128,7 +128,7 @@ impl GitCredentialHelper {
     
     pub fn get_git_helper_status(&self) -> Result<bool, GitHelperError> {
         let output = Command::new("git")
-            .args(&["config", "--global", "credential.helper"])
+            .args(["config", "--global", "credential.helper"])
             .output()?;
         
         if !output.status.success() {

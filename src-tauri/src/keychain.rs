@@ -18,6 +18,12 @@ pub struct KeychainManager {
     storage: Arc<Mutex<HashMap<String, String>>>,
 }
 
+impl Default for KeychainManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl KeychainManager {
     pub fn new() -> Self {
         Self {
