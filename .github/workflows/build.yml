@@ -22,14 +22,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm i
 
       - name: Run frontend tests
         run: npm run test --if-present
@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Rust stable
@@ -64,7 +64,7 @@ jobs:
           targets: x86_64-apple-darwin
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm i
 
       - name: Build frontend
         run: npm run build
@@ -84,7 +84,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Rust stable
@@ -93,7 +93,7 @@ jobs:
           targets: aarch64-apple-darwin
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm i
 
       - name: Build frontend
         run: npm run build
