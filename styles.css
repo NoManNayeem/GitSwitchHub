@@ -17,6 +17,7 @@
     --background: #ffffff;
     --background-alt: #f8fafc;
     --border: #e2e8f0;
+    --code-bg: #f1f5f9;
     --success: #10b981;
     --warning: #f59e0b;
     --error: #ef4444;
@@ -785,6 +786,154 @@ body {
 .step-description {
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+/* Tutorial Methods */
+.tutorial-methods {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
+}
+
+@media (min-width: 1024px) {
+    .tutorial-methods {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.method-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    transition: all 0.3s ease;
+}
+
+.method-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary);
+}
+
+.method-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.method-title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.method-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-size-md);
+}
+
+.method-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.method-steps .step {
+    align-items: flex-start;
+    text-align: left;
+    flex-direction: row;
+    gap: var(--space-lg);
+}
+
+.method-steps .step::after {
+    display: none;
+}
+
+.method-steps .step-number {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: var(--font-size-md);
+}
+
+.method-steps .step-content {
+    flex: 1;
+}
+
+.method-steps .step-title {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--space-sm);
+}
+
+.method-steps .step-description {
+    margin-bottom: var(--space-md);
+}
+
+.code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-top: var(--space-sm);
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: var(--font-size-sm);
+    overflow-x: auto;
+}
+
+.code-block code {
+    color: var(--text-primary);
+    white-space: pre-line;
+}
+
+/* Tutorial Footer */
+.tutorial-footer {
+    margin-top: var(--space-3xl);
+}
+
+.guide-card {
+    background: var(--gradient-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.guide-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+.guide-content {
+    position: relative;
+    z-index: 2;
+}
+
+.guide-title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+}
+
+.guide-description {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-xl);
+    opacity: 0.9;
+}
+
+.btn-small {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-md);
 }
 
 /* Download Section */
