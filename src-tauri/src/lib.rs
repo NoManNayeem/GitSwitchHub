@@ -26,7 +26,12 @@ pub fn run() {
             commands::generate_ssh_key,
             commands::get_ssh_config,
             commands::convert_remote_to_ssh,
-            commands::show_account_chooser
+            commands::show_account_chooser,
+            commands::get_auto_detection_status,
+            commands::toggle_auto_detection,
+            commands::start_background_service,
+            commands::stop_background_service,
+            commands::set_account_for_activity
         ])
         .setup(|app| {
             // Initialize database on startup

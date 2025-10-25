@@ -52,8 +52,7 @@
     "release": "standard-version",
     "release:major": "standard-version --release-as major",
     "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "build:pages": "mkdir -p dist && cp pages-index.html dist/index.html && cp styles.css script.js dist/ && cp -r public dist/ 2>/dev/null || true"
+    "release:patch": "standard-version --release-as patch"
   },
   "dependencies": {
     "react": "^19.1.0",

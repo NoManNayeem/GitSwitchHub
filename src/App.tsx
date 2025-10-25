@@ -23,6 +23,17 @@ interface GitHelperStatus {
   configured: boolean;
 }
 
+interface GitActivity {
+  repository: string;
+  operation: string;
+  remote_url?: string;
+}
+
+interface AccountSelectionPopup {
+  visible: boolean;
+  activity: GitActivity | null;
+}
+
 function App() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [mappings, setMappings] = useState<RepositoryMapping[]>([]);
@@ -31,6 +42,14 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  
+  // Auto-detection state
+  const [autoDetectionEnabled, setAutoDetectionEnabled] = useState(false);
+  const [backgroundServiceRunning, setBackgroundServiceRunning] = useState(false);
+  const [accountSelectionPopup, setAccountSelectionPopup] = useState<AccountSelectionPopup>({
+    visible: false,
+    activity: null
+  });
 
   // Add account form state
   const [newAccountUsername, setNewAccountUsername] = useState('');
@@ -43,7 +62,25 @@ function App() {
 
   useEffect(() => {
     loadData();
+    checkAutoDetectionStatus();
+    setupEventListeners();
   }, []);
+
+  const checkAutoDetectionStatus = async () => {
+    try {
+      const status = await invoke<{enabled: boolean, running: boolean}>('get_auto_detection_status');
+      setAutoDetectionEnabled(status.enabled);
+      setBackgroundServiceRunning(status.running);
+    } catch (err) {
+      console.error('Failed to check auto-detection status:', err);
+    }
+  };
+
+  const setupEventListeners = () => {
+    // Listen for Git activity events from the backend
+    // This would be implemented when we add the actual background monitoring
+    // For now, this is a placeholder for future implementation
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -179,6 +216,68 @@ function App() {
   const clearMessages = () => {
     setError(null);
     setSuccess(null);
+  };
+
+  // Auto-detection functions
+  const toggleAutoDetection = async () => {
+    setLoading(true);
+    try {
+      await invoke('toggle_auto_detection');
+      await checkAutoDetectionStatus();
+      setSuccess(autoDetectionEnabled ? 'Auto-detection disabled' : 'Auto-detection enabled');
+    } catch (err) {
+      setError(`Failed to toggle auto-detection: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startBackgroundService = async () => {
+    setLoading(true);
+    try {
+      await invoke('start_background_service');
+      await checkAutoDetectionStatus();
+      setSuccess('Background service started');
+    } catch (err) {
+      setError(`Failed to start background service: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const stopBackgroundService = async () => {
+    setLoading(true);
+    try {
+      await invoke('stop_background_service');
+      await checkAutoDetectionStatus();
+      setSuccess('Background service stopped');
+    } catch (err) {
+      setError(`Failed to stop background service: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectAccountForActivity = async (accountId: string) => {
+    if (!accountSelectionPopup.activity) return;
+    
+    setLoading(true);
+    try {
+      await invoke('set_account_for_activity', {
+        activity: accountSelectionPopup.activity,
+        accountId
+      });
+      setAccountSelectionPopup({ visible: false, activity: null });
+      setSuccess('Account selected for Git operation');
+    } catch (err) {
+      setError(`Failed to select account: ${err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelAccountSelection = () => {
+    setAccountSelectionPopup({ visible: false, activity: null });
   };
 
   return (
@@ -382,6 +481,44 @@ function App() {
             </div>
 
             <div className="settings-section">
+              <h3>Auto-Detection</h3>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <h4>Smart Git Activity Detection</h4>
+                  <p>
+                    Automatically detect Git operations and show account selection popup
+                  </p>
+                  <div className="status-indicators">
+                    <span className={`status ${autoDetectionEnabled ? 'enabled' : 'disabled'}`}>
+                      {autoDetectionEnabled ? 'Enabled' : 'Disabled'}
+                    </span>
+                    <span className={`status ${backgroundServiceRunning ? 'running' : 'stopped'}`}>
+                      Service: {backgroundServiceRunning ? 'Running' : 'Stopped'}
+                    </span>
+                  </div>
+                </div>
+                <div className="setting-actions">
+                  <button 
+                    onClick={toggleAutoDetection}
+                    disabled={loading}
+                    className={autoDetectionEnabled ? 'danger' : 'primary'}
+                  >
+                    {loading ? 'Toggling...' : (autoDetectionEnabled ? 'Disable' : 'Enable')} Auto-Detection
+                  </button>
+                  {autoDetectionEnabled && (
+                    <button 
+                      onClick={backgroundServiceRunning ? stopBackgroundService : startBackgroundService}
+                      disabled={loading}
+                      className="secondary"
+                    >
+                      {loading ? 'Processing...' : (backgroundServiceRunning ? 'Stop Service' : 'Start Service')}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="settings-section">
               <h3>Git Credential Helper</h3>
               <div className="setting-item">
                 <div className="setting-info">
@@ -406,10 +543,67 @@ function App() {
                 when working with different repositories. It automatically manages your Git 
                 credentials and repository mappings.
               </p>
+              <p>
+                <strong>Auto-Detection Feature:</strong> When enabled, GitSwitchHub monitors your 
+                terminal, VS Code, and other IDEs for Git operations (push, pull, fetch, clone) 
+                and automatically shows a popup to select the appropriate GitHub account.
+              </p>
             </div>
           </div>
         )}
       </main>
+
+      {/* Account Selection Popup */}
+      {accountSelectionPopup.visible && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <div className="popup-header">
+              <h3>Select GitHub Account</h3>
+              <p>Choose an account for this Git operation:</p>
+            </div>
+            
+            {accountSelectionPopup.activity && (
+              <div className="activity-info">
+                <div className="activity-item">
+                  <strong>Repository:</strong> {accountSelectionPopup.activity.repository}
+                </div>
+                <div className="activity-item">
+                  <strong>Operation:</strong> {accountSelectionPopup.activity.operation}
+                </div>
+                {accountSelectionPopup.activity.remote_url && (
+                  <div className="activity-item">
+                    <strong>Remote:</strong> {accountSelectionPopup.activity.remote_url}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="account-selection">
+              {accounts.map(account => (
+                <div 
+                  key={account.id} 
+                  className="account-option"
+                  onClick={() => selectAccountForActivity(account.id)}
+                >
+                  {account.avatar_url && (
+                    <img src={account.avatar_url} alt={account.username} className="account-avatar" />
+                  )}
+                  <div className="account-details">
+                    <h4>{account.username}</h4>
+                    <p>Added: {new Date(account.created_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="popup-actions">
+              <button onClick={cancelAccountSelection} className="btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

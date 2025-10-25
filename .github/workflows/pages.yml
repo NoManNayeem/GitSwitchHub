@@ -34,9 +34,12 @@ jobs:
       - name: Build branding page
         run: |
           echo "Building branding page..."
-          npm run build:pages
-          echo "Build completed. Contents of dist/:"
-          ls -la dist/
+          mkdir -p pages-dist
+          cp pages-index.html pages-dist/index.html
+          cp styles.css script.js pages-dist/
+          cp -r public pages-dist/ 2>/dev/null || true
+          echo "Build completed. Contents of pages-dist/:"
+          ls -la pages-dist/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -44,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: pages-dist
 
   deploy:
     name: Deploy to GitHub Pages

@@ -374,3 +374,44 @@ pub async fn show_account_chooser(
 
     Ok(account.username.clone())
 }
+
+// Auto-detection commands
+#[tauri::command]
+pub async fn get_auto_detection_status() -> Result<serde_json::Value, String> {
+    // TODO: Implement actual auto-detection status checking
+    // For now, return mock data
+    Ok(serde_json::json!({
+        "enabled": false,
+        "running": false
+    }))
+}
+
+#[tauri::command]
+pub async fn toggle_auto_detection() -> Result<(), String> {
+    // TODO: Implement auto-detection toggle
+    // This would start/stop the background monitoring service
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn start_background_service() -> Result<(), String> {
+    // TODO: Implement background service startup
+    // This would start monitoring terminal, VS Code, and other IDEs
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn stop_background_service() -> Result<(), String> {
+    // TODO: Implement background service shutdown
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn set_account_for_activity(
+    _activity: serde_json::Value,
+    _account_id: String,
+) -> Result<(), String> {
+    // TODO: Implement setting account for specific Git activity
+    // This would configure the credential helper for the specific operation
+    Ok(())
+}

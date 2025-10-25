@@ -327,7 +327,7 @@ button.danger:hover:not(:disabled) {
 .setting-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 1rem 0;
   border-bottom: 1px solid #f1f5f9;
 }
@@ -353,6 +353,216 @@ button.danger:hover:not(:disabled) {
   margin: 0;
   color: #64748b;
   line-height: 1.6;
+}
+
+/* Auto-detection styles */
+.setting-info {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status.enabled {
+  background: #10b981;
+  color: white;
+}
+
+.status.disabled {
+  background: #94a3b8;
+  color: white;
+}
+
+.status.running {
+  background: #06b6d4;
+  color: white;
+}
+
+.status.stopped {
+  background: #ef4444;
+  color: white;
+}
+
+.setting-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+}
+
+.setting-actions button {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.setting-actions button.primary {
+  background: #6366f1;
+  color: white;
+}
+
+.setting-actions button.primary:hover {
+  background: #4f46e5;
+}
+
+.setting-actions button.secondary {
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+}
+
+.setting-actions button.secondary:hover {
+  background: #e2e8f0;
+}
+
+.setting-actions button.danger {
+  background: #ef4444;
+  color: white;
+}
+
+.setting-actions button.danger:hover {
+  background: #dc2626;
+}
+
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.popup-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.popup-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.activity-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.activity-item {
+  margin-bottom: 0.5rem;
+}
+
+.activity-item:last-child {
+  margin-bottom: 0;
+}
+
+.activity-item strong {
+  color: #1e293b;
+}
+
+.account-selection {
+  margin-bottom: 1.5rem;
+}
+
+.account-option {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.account-option:hover {
+  background: #f8fafc;
+  border-color: #6366f1;
+}
+
+.account-option:last-child {
+  margin-bottom: 0;
+}
+
+.account-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.account-details h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.account-details p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.popup-actions {
+  text-align: center;
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
 }
 
 /* Responsive design */
