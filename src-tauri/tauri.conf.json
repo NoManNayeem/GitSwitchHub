@@ -42,19 +42,7 @@
   },
   "plugins": {
     "shell": {
-      "all": false,
-      "scope": [
-        {
-          "name": "git",
-          "cmd": "git",
-          "args": ["config", "--global", "credential.helper"]
-        },
-        {
-          "name": "git-setup",
-          "cmd": "git",
-          "args": ["config", "--global", "credential.helper", "!<path>", "credential-helper"]
-        }
-      ]
+      "open": true
     }
   }
 }
